@@ -1,0 +1,142 @@
+<div class="container">
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let lists of userLists; let idx=index">
+                    <td>{{lists.id}}</td>
+                    <td *ngIf="idx != index">{{lists.fname}}</td>
+                    <td *ngIf="idx == index">
+                        <input type="text" name="fname" [ngModel]="lists.fname" >
+                    </td>
+                    <td *ngIf="idx != index">{{lists.lname}}</td>
+                    <td *ngIf="idx == index">
+                        <input type="text" name="lname" [ngModel]="lists.lname" />
+                    </td>
+                    <td *ngIf="idx != index">{{lists.email}}</td>
+                    <td *ngIf="idx == index">
+                        <input type="text" name="email" [ngModel]="lists.email" />
+                    </td>
+                    <td *ngIf="idx != index">{{lists.phone}}</td>
+                    <td *ngIf="idx == index">
+                        <input type="text" name="phone" [ngModel]="lists.phone" />
+                    </td>
+                    <td *ngIf="idx != index">{{lists.address}}</td>
+                    <td *ngIf="idx == index">
+                        <input type="text" name="address" [ngModel]="lists.address" />
+                    </td>
+                    <td *ngIf="idx != index">{{lists.status}}</td>
+                    <td *ngIf="idx == index">
+                        <select [ngModel]="user.status" class="form-control" id="status" name="status"
+                        required
+                        [ngClass]="(status.invalid && (status.dirty || st322atus.touched))?'is-invalid':((status.touched)?'is-valid':'')"
+                        #status = "ngModel"
+                        >
+                            <option  value="">--select status--</option>
+                            <option *ngFor="let s of statusText" [selected]="s.stat==user.status" >{{s.stat}}</option>
+                        </select>
+                    </td>
+                    <td><a href="javascript:void(0);" (click)="editData(lists, idx)" >Edit</a> | <a href="javascript:void(0);" (click)="deleteData(lists, idx)">Delete</a></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7"></td>
+                    <td align="left"><button type="button" class="btn btn-outline-info" (click)="addUser()">{{addButton}}</button></td>        
+                </tr>
+            </tfoot>
+        </table>
+        <div class="col-md-4" *ngIf="showForm? showForm : editForm">
+            <form #addForm = "ngForm" (ngSubmit) = "saveUser(addForm)" >
+                <div class="form-group row">
+                    <label for="fname">First Name</label>
+                    <input type="text" [ngModel]="user.fname" class="form-control" id="fname" name="fname" placeholder="First Name"
+                    required
+                    [ngClass]="(fname.invalid && (fname.dirty || fname.touched))?'is-invalid':((fname.touched)?'is-valid':'')"
+                    #fname = "ngModel"
+                    >
+                    <div *ngIf="fname.invalid && (fname.dirty || fname.touched)"
+                    [ngClass]="(fname.invalid && (fname.dirty || fname.touched))?'invalid-feedback':''"
+                    >
+                        <p *ngIf="fname.errors.required">First name required.</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="lname">Last Name</label>
+                    <input type="text" [ngModel]="user.lname" class="form-control" id="lname" name="lname" placeholder="Last Name"
+                    required
+                    [ngClass]="(lname.invalid && (lname.dirty || lname.touched))?'is-invalid':((lname.touched)?'is-valid':'')"
+                    #lname = "ngModel"
+                    >
+                    <div *ngIf="lname.invalid && (lname.dirty || lname.touched)"
+                    [ngClass]="(lname.invalid && (lname.dirty || lname.touched))?'invalid-feedback':''"
+                    >
+                        <p *ngIf="lname.errors.required">Last name required.</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="email">Email</label>
+                    <input type="text" [ngModel]="user.email" class="form-control" id="email" name="email" placeholder="Email Address" 
+                    required 
+                    pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                    [ngClass]="(email.invalid && (email.dirty || email.touched))?'is-invalid':((email.touched)?'is-valid':'')"
+                    #email = "ngModel"
+                    >
+                    <div *ngIf="email.invalid && (email.dirty || email.touched)"
+                    [ngClass]="(email.invalid && (email.dirty || email.touched))?'invalid-feedback':''"
+                    >
+                        <p *ngIf="email.errors.required">Email is required.</p>
+                        <p *ngIf="email.errors.pattern">Invalid email address.</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="phone">Phone</label>
+                    <input type="number" [ngModel]="user.phone" class="form-control" id="phone" name="phone" placeholder="phone"
+                    pattern=".{9,}"
+                    [ngClass]="(phone.invalid && (phone.dirty || phone.touched))?'is-invalid':((phone.touched)?'is-valid':'')"
+                    #phone = "ngModel"
+                    >
+                    <div *ngIf="phone.invalid && (phone.dirty || phone.touched)"
+                    [ngClass]="(phone.invalid && (phone.dirty || phone.touched))?'invalid-feedback':''"
+                    >
+                        <p *ngIf="email.errors.pattern">Invalid phone number.</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="address">Address</label>
+                    <textarea [ngModel]="user.address" class="form-control"  id="address" rows="3" name="address" placeholder="Address"></textarea>
+                </div>
+                <div class="form-group row">
+                    <label for="status">Status</label>
+                    <select [ngModel]="user.status" class="form-control" id="status" name="status"
+                    required
+                    [ngClass]="(status.invalid && (status.dirty || st322atus.touched))?'is-invalid':((status.touched)?'is-valid':'')"
+                    #status = "ngModel"
+                    >
+                        <option  value="">--select status--</option>
+                        <option *ngFor="let s of statusText" [selected]="s.stat==user.status" >{{s.stat}}</option>
+                    </select>
+                    <div *ngIf="status.invalid && (status.dirty || status.touched)"
+                    [ngClass]="(status.invalid && (status.dirty || status.touched))?'invalid-feedback':''"
+                    >
+                        <p *ngIf="email.errors.required">Status is required.</p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <button type="submit" class="btn btn-primary" [disabled]="addForm.invalid">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
